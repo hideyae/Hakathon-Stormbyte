@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Weather Dashboard - Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            padding: 60px;
+            background: linear-gradient(135deg, #0B3D91 0%, #1a5f7a 100%);
+            color: white;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        /* Slide Backgrounds */
+        .slide-1 { background: linear-gradient(135deg, #0B3D91 0%, #1a1a2e 100%); }
+        .slide-2 { background: linear-gradient(135deg, #1a5f7a 0%, #2c7a9b 100%); }
+        .slide-3 { background: linear-gradient(135deg, #2c7a9b 0%, #0B3D91 100%); }
+        .slide-4 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+        .slide-5 { background: linear-gradient(135deg, #0B3D91 0%, #667eea 100%); }
+        .slide-6 { background: linear-gradient(135deg, #16213e 0%, #1a5f7a 100%); }
+        .slide-7 { background: linear-gradient(135deg, #FC3D21 0%, #0B3D91 100%); }
+
+        /* Slide Content */
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            color: #86c5da;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 3rem;
+            color: #b8dfe6;
+            font-weight: 400;
+        }
+
+        .logo {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .feature-desc {
+            font-size: 1.1rem;
+            color: #d4eff5;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tech-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            min-width: 150px;
+            transition: all 0.3s;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #FC3D21;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            color: #d4eff5;
+        }
+
+        .demo-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .demo-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .cta-btn {
+            padding: 1.5rem 3rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-primary {
+            background: #FC3D21;
+            color: white;
+            box-shadow: 0 10px 30px rgba(252, 61, 33, 0.3);
+        }
+
+        .cta-primary:hover {
+            background: #e63619;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(252, 61, 33, 0.5);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            font-size: 1.2rem;
+            color: white;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .bullets {
+            text-align: left;
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        .bullets li {
+            margin: 1rem 0;
+            padding-left: 1rem;
+        }
+
+        .bullets li::marker {
+            content: "✓ ";
+            color: #FC3D21;
+            font-weight: bold;
+        }
+
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .arch-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .arch-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .arch-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #86c5da;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            .feature-grid,
+            .stats-grid,
+            .architecture-diagram {
+                grid-template-columns: 1fr;
+            }
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide Counter -->
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">7</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1 active">
+            <div class="slide-content">
+                <div class="logo">🌍</div>
+                <h1>NASA Weather Dashboard</h1>
+                <p class="subtitle">Empowering Decisions with Real-Time Earth Observation Data</p>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-icon">🛰️</div>
+                        <div>NASA POWER API</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">🗺️</div>
+                        <div>Interactive Maps</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">📊</div>
+                        <div>Advanced Analytics</div>
+                    </div>
+                </div>
+                <p style="margin-top: 3rem; font-size: 1.2rem; color: #b8dfe6;">
+                    NASA Space Apps Challenge 2024 | Team OceanSafe
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide slide-2">
+            <div class="slide-content">
+                <h2>🎯 The Challenge</h2>
+                <p class="subtitle">People need better access to weather data for critical decisions</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌊</div>
+                        <div class="feature-title">Ocean Safety</div>
+                        <div class="feature-desc">Sailors, fishermen, and beachgoers need real-time conditions to ensure safety</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌾</div>
+                        <div class="feature-title">Agriculture</div>
+                        <div class="feature-desc">Farmers require accurate forecasts for planting, irrigation, and harvest planning</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✈️</div>
+                        <div class="feature-title">Aviation</div>
+                        <div class="feature-desc">Pilots need comprehensive weather analysis for flight safety</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎪</div>
+                        <div class="feature-title">Event Planning</div>
+                        <div class="feature-desc">Organizers must predict conditions weeks in advance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Solution -->
+        <div class="slide slide-3">
+            <div class="slide-content">
+                <h2>💡 Our Solution</h2>
+                <p class="subtitle">A comprehensive platform powered by NASA satellite data</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📍</div>
+                        <div class="feature-title">3 Location Selection Methods</div>
+                        <div class="feature-desc">Search by name, click on map, or enter coordinates manually</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎲</div>
+                        <div class="feature-title">Probability Analysis</div>
+                        <div class="feature-desc">Calculate likelihood of weather thresholds with confidence intervals</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">Statistical Insights</div>
+                        <div class="feature-desc">Mean, median, trends, anomalies, and moving averages</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💾</div>
+                        <div class="feature-title">Data Export</div>
+                        <div class="feature-desc">Download results in CSV, JSON, or HTML format</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Key Features -->
+        <div class="slide slide-4">
+            <div class="slide-content">
+                <h2>⚡ Key Features</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">40+</div>
+                        <div class="stat-label">Years of Data</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Weather Variables</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Free & Open</div>
+                    </div>
+                </div>
+
+                <ul class="bullets" style="max-width: 800px; margin: 3rem auto;">
+                    <li>Real-time access to NASA POWER satellite data</li>
+                    <li>Interactive Leaflet maps with global coverage</li>
+                    <li>Advanced Chart.js visualizations</li>
+                    <li>Statistical analysis engine (probability, trends, anomalies)</li>
+                    <li>Mobile-responsive design for any device</li>
+                    <li>Zero installation - runs in any browser</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: Technical Architecture -->
+        <div class="slide slide-5">
+            <div class="slide-content">
+                <h2>🏗️ Technical Architecture</h2>
+                <p class="subtitle">Modular design for scalability and maintainability</p>
+                
+                <div class="architecture-diagram">
+                    <div class="arch-box">
+                        <div class="arch-icon">🎨</div>
+                        <div class="arch-title">Frontend</div>
+                        <p style="margin-top: 1rem; color: #d4eff5;">HTML5, CSS3<br>Pure JavaScript</p>
+                    </div>
+                    <div class="arch-box">
+                        <div class="arch-icon">🛰️</div>
+                        <div class="arch-title">Data Layer</div>
+                        <p style="margin-top: 1rem; color: #d4eff5;">NASA POWER API<br>Nominatim OSM</p>
+                    </div>
+                    <div class="arch-box">
+                        <div class="arch-icon">📊</div>
+                        <div class="arch-title">Visualization</div>
+                        <p style="margin-top: 1rem; color: #d4eff5;">Chart.js<br>Leaflet.js</p>
+                    </div>
+                    <div class="arch-box">
+                        <div class="arch-icon">🔬</div>
+                        <div class="arch-title">Analytics</div>
+                        <p style="margin-top: 1rem; color: #d4eff5;">Statistics Engine<br>Probability Calc</p>
+                    </div>
+                    <div class="arch-box">
+                        <div class="arch-icon">💾</div>
+                        <div class="arch-title">Export</div>
+                        <p style="margin-top: 1rem; color: #d4eff5;">CSV, JSON<br>HTML Reports</p>
+                    </div>
+                    <div class="arch-box">
+                        <div class="arch-icon">⚙️</div>
+                        <div class="arch-title">Configuration</div>
+                        <p style="margin-top: 1rem; color: #d4eff5;">Modular Config<br>Easy Customization</p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 2rem; font-size: 1.2rem; color: #b8dfe6;">
+                    12 modular files working together as a tree of code
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Demo & Use Cases -->
+        <div class="slide slide-6">
+            <div class="slide-content">
+                <h2>🎬 Live Demo Workflow</h2>
+                
+                <div class="demo-preview">
+                    <div class="demo-image">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🌍 → 📊 → 💾</div>
+                            <div style="font-size: 1.5rem; color: #b8dfe6;">
+                                Select Location → Analyze Data → Export Results
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-grid" style="margin-top: 2rem;">
+                    <div class="feature-card">
+                        <div class="feature-title">1. Select Location</div>
+                        <div class="feature-desc">"Miami Beach" or click map → Auto-finds coordinates</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">2. Choose Parameters</div>
+                        <div class="feature-desc">Temperature, Wind, Precipitation, Humidity</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">3. Set Thresholds</div>
+                        <div class="feature-desc">Temp > 35°C, Wind > 15 m/s = Alert conditions</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">4. Get Insights</div>
+                        <div class="feature-desc">Charts, statistics, probability forecasts in seconds</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Impact & Next Steps -->
+        <div class="slide slide-7">
+            <div class="slide-content">
+                <h2>🚀 Impact & Future</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">🌍</div>
+                        <div class="stat-label">Global Coverage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🆓</div>
+                        <div class="stat-label">Free Forever</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">📱</div>
+                        <div class="stat-label">Any Device</div>
+                    </div>
+                </div>
+
+                <h2 style="margin-top: 3rem; font-size: 2rem; color: #86c5da;">Next Steps</h2>
+                <ul class="bullets" style="max-width: 700px; margin: 2rem auto;">
+                    <li>Add AI-powered predictions with machine learning</li>
+                    <li>Integrate additional NASA data sources (MODIS, GOES)</li>
+                    <li>Multi-location comparison features</li>
+                    <li>Mobile app development (iOS/Android)</li>
+                    <li>Community contributions and open-source expansion</li>
+                </ul>
+
+                <div class="cta-buttons">
+                    <button class="cta-btn cta-primary" onclick="alert('🌍 Try the live demo at: index.html\n\nOr visit GitHub for full source code!')">
+                        Try Live Demo
+                    </button>
+                    <button class="cta-btn cta-secondary" onclick="alert('📚 Check out:\n\n✓ README.md - Full documentation\n✓ examples.html - API testing\n✓ DEPLOYMENT.md - Deploy guide')">
+                        View Documentation
+                    </button>
+                </div>
+
+                <p style="margin-top: 3rem; font-size: 1.3rem; color: #d4eff5;">
+                    <strong>Thank You!</strong><br>
+                    Questions? Let's discuss! 🎉
+                </p>
+            </div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="previousSlide()">←</button>
+            <button class="nav-btn" onclick="nextSlide()">→</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) {
+                currentSlide = 1;
+            }
+            if (n < 1) {
+                currentSlide = totalSlides;
+            }
+            
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index + 1 === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index + 1 < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide > totalSlides) currentSlide = 1;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            if (currentSlide < 1) currentSlide = totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Click to advance
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-btn') && !e.target.closest('.cta-btn')) {
+                nextSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        console.log('🎉 Presentation Controls:');
+        console.log('→ Next Slide: Arrow Right, Space, or Click');
+        console.log('← Previous Slide: Arrow Left');
+        console.log('📊 Total Slides: 7');
+    </script>
+</body>
+</html>
